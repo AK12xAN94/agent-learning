@@ -44,3 +44,13 @@ def get_logger(
     file_handler.setFormatter(DEFAULT_LOG_FORMAT)
     logger.addHandler(file_handler)
     return logger
+
+# 快捷获取日志记录器
+logger = get_logger()
+
+if __name__ == "__main__":
+    logger.info("这是一条info日志")
+    logger.debug("这是一条debug日志")
+    logger.error("这是一条error日志")
+    logger.warning("这是一条warning日志")
+    logger.critical("这是一条critical日志")
