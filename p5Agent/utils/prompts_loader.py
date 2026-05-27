@@ -1,6 +1,6 @@
-from utils.config_handler import prompts_config
-from utils.path_tool import get_abs_path
-from utils.logger_handler import logger
+from p5Agent.utils.config_handler import prompts_config
+from p5Agent.utils.path_tool import get_abs_path
+from p5Agent.utils.logger_handler import logger
 
 def load_system_prompts() -> dict[str, str]:
     try:

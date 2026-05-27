@@ -1,4 +1,5 @@
 from langchain_chroma import Chroma
+from p5Agent.utils.path_tool import get_abs_path
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.embeddings import Embeddings

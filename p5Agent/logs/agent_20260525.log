@@ -1,0 +1,1 @@
+2026-05-25 23:04:31,833 - agent - ERROR - prompts_loader.py:28 - [load_rag_prompts]加载rag提示词失败: [Errno 2] No such file or directory: 'f:\\python_project\\py_code\\AI大模型与RAG\\p5Agent\\prompts/rag_summarize_prompt.txt'
