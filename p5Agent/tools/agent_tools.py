@@ -1,14 +1,26 @@
-from langchain_core.messages import tool
-from langchain_core.tools import tool
+import sys
 import os
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
+sys.path.insert(0, os.path.dirname(parent_dir))
+
+from langchain_core.tools import tool
 import random
-from AI大模型与RAG.p5Agent.utils.config_handler import agent_config
-from AI大模型与RAG.p5Agent.utils.path_tool import get_abs_path
-from p5Agent.rag.rag_service import RagSummarizeService
+from utils.config_handler import agent_config
+from utils.path_tool import get_abs_path
+from utils.logger_handler import logger
+
 
 external_data_path = {}
-rag = RagSummarizeService()
+
+try:
+    from p5Agent.rag.rag_service import RagSummarizeService
+    rag = RagSummarizeService()
+except Exception as e:
+    print(f"警告：无法初始化 RagSummarizeService: {e}")
+    rag = None
 
 user_ids = ['1001', '1002', '1003', '1004', '1005', '1006', '1007', '1008', '1009', '1010']
 month_arr = ['2025-01', '2025-02', '2025-03', '2025-04', '2025-05', '2025-06', '2025-07', '9月', '10月', '11月', '12月']
@@ -34,10 +46,6 @@ def get_user_id() -> str:
 @tool(description="获取当前月份的天数，以纯字符串的形式返回")
 def get_current_month() -> str:
     return random.choice(month_arr)
-
-@tool(description="从外部数据源获取用户数据，以纯字符串形式返回，如果未检索到则返回字符串")
-def fetch_external_data(user_id: str, month: str) -> str:
-    return f"用户{user_id}在{month}的外部数据"
 
 def generate_external_data():
     if not external_data:
@@ -69,16 +77,16 @@ def generate_external_data():
                         "comparision": comparision,
                     }
 
-@tool(description="从外部数据源获取用户数据，以纯字符串形式返回，如果未检索到则返回字符串")
 def fetch_external_data(user_id: str, month: str) -> str:
 
     generate_external_data()
 
     try:
-        if user_id not in external_data:
-            return f"用户{user_id}在{month}没有外部数据"
-        if month not in external_data[user_id]:
-            return f"用户{user_id}在{month}没有外部数据"
-        return f"用户{user_id}在{month}的外部数据为：{external_data[user_id][month]}"
-    except KeyError as e:
-        return f"用户{user_id}在{month}没有外部数据"
+        return external_data[user_id][month]
+    except KeyError:
+        logger.warning(f"[fetch_external_data] 未能检索到用户：{user_id}在{month}的使用记录数据")
+        return ""
+
+if __name__ == "__main__":
+    print(fetch_external_data("1001", "2025-01"))
+    print(fetch_external_data("1001", "2025-02"))
